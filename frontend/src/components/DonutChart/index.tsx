@@ -1,12 +1,27 @@
+import axios from 'axios';
 import React from 'react';
 import Chart from 'react-apexcharts'
+import { SaleSum } from 'types/sale';
+import { baseURL } from 'utils/requests';
 // import { Container } from './styles';
 
+interface ChartData{
+  series: number[]
+  labels: string[]
+}
+
 const DonutChart: React.FC = () => {
-  const mockData = {
-    series: [477138, 499928, 444867, 220426, 473088],
-    labels: ['Anakin', 'Barry Allen', 'Kal-El', 'Logan', 'Padmé']
-  }
+  let chartData: ChartData = {labels: [], series: []}
+
+  axios.get(`${baseURL}/sales/sumbyseller`)
+    .then((response) => {
+      const data = response.data as SaleSum[]
+      const series = data.map(x => x.sum)
+      const labels = data.map(x => x.sellerName)
+
+      chartData = {labels, series}
+      console.log("chatData: ", chartData);
+  })
 
   const options = {
       legend: {
@@ -14,7 +29,7 @@ const DonutChart: React.FC = () => {
       }
   }
   return (
-    <Chart options={{ ...options, labels: mockData.labels }} series={mockData.series} type="donut" height="240"/>
+    <Chart options={{ ...options, labels: chartData.labels }} series={chartData.series} type="donut" height="240"/>
   );
 }
 
