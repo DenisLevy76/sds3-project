@@ -1,7 +1,3 @@
-import React, { ReactNode } from "react";
-
-// import { Container } from './styles';
-
 interface PaginationProps {
   page: number;
   first: boolean;
